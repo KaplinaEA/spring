@@ -12,32 +12,27 @@ public class CommentController {
     private CommentService commentService;
 
     @GetMapping
-    public Iterable<Comment> index()
-    {
+    public Iterable<Comment> index() {
         return commentService.index();
     }
 
     @GetMapping("{news:\\d+}")
-    public Comment show(@PathVariable Comment comment)
-    {
+    public Comment show(@PathVariable Comment comment) {
         return comment;
     }
 
     @PostMapping("/new")
-    public Comment create(@RequestParam String text, @RequestParam Integer idNews)
-    {
+    public Comment create(@RequestParam String text, @RequestParam Integer idNews) {
         return commentService.create(text, idNews);
     }
 
     @PutMapping()
-    public Comment edit(@RequestBody String request)
-    {
+    public Comment edit(@RequestBody String request) {
         return commentService.edit(request);
     }
 
     @DeleteMapping("{news:\\d+}")
-    public void delete(@PathVariable Comment comment)
-    {
+    public void delete(@PathVariable Comment comment) {
         commentService.delete(comment);
     }
 }

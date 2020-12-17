@@ -1,13 +1,12 @@
 package com.example.ssu.Entity;
 
 import com.example.ssu.Helper.AbstractStatus;
-import com.example.ssu.Helper.Status;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity(name = "news")
-public class News{//} extends Status{
+public class News{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
@@ -24,22 +23,14 @@ public class News{//} extends Status{
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Tegs> tegsSet;
 
-    @ManyToOne
-    @JoinColumn
-    private Status status;
+    @Column(nullable = false)
+    public Integer status;
 
     public News() {}
     public News(String name, String description) {
         this.name = name;
         this.description = description;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
+        this.status =  AbstractStatus.ACTIVE;
     }
 
     public Set<Tegs> getTegsSet() {
@@ -80,5 +71,17 @@ public class News{//} extends Status{
 
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
+    }
+
+    public Integer getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getStatusName() {
+        return AbstractStatus.getName(this.status);
     }
 }

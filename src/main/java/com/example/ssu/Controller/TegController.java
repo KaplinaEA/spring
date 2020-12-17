@@ -12,32 +12,27 @@ public class TegController {
     private TegsService tegsService;
 
     @GetMapping
-    public Iterable<Tegs> index()
-    {
+    public Iterable<Tegs> index() {
         return tegsService.index();
     }
 
     @GetMapping("{tegs:\\d+}")
-    public Tegs show(@PathVariable Tegs tegs)
-    {
+    public Tegs show(@PathVariable Tegs tegs) {
         return tegs;
     }
 
     @PostMapping("/new")
-    public Tegs create(@RequestParam String name)
-    {
+    public Tegs create(@RequestParam String name) {
         return tegsService.create(name);
     }
 
     @PutMapping()
-    public Tegs edit(@RequestBody String request)
-    {
+    public Tegs edit(@RequestBody String request) {
         return tegsService.edit(request);
     }
 
     @DeleteMapping("{tegs:\\d+}")
-    public void delete(@PathVariable Tegs tegs)
-    {
+    public void delete(@PathVariable Tegs tegs) {
         tegsService.delete(tegs);
     }
 }

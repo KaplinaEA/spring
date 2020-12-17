@@ -1,12 +1,14 @@
 package com.example.ssu.Entity;
 
+import com.example.ssu.Helper.AbstractStatus;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity(name = "comment")
 public class Comment {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false)
@@ -21,10 +23,14 @@ public class Comment {
     @Column(nullable = false)
     private String text;
 
+    @Column(nullable = false)
+    public Integer status;
+
     public Comment() {
     }
+
     public Comment(String text, News news) {
-        this.news =  news;
+        this.news = news;
         this.creteAt = new Date();
         this.updateAp = new Date();
         this.text = text;
@@ -68,5 +74,17 @@ public class Comment {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Integer getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getStatusName() {
+        return AbstractStatus.getName(this.status);
     }
 }

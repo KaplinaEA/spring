@@ -1,19 +1,15 @@
 package com.example.ssu.Entity;
 
 import com.example.ssu.Helper.AbstractStatus;
-import com.example.ssu.Helper.Status;
-import com.example.ssu.Helper.StatusRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity(name = "tegs")
-public class Tegs{
-//} extends Status{
+public class Tegs {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false)
@@ -23,13 +19,15 @@ public class Tegs{
     @JoinTable
     private Set<News> newsSet;
 
-    @ManyToOne
-    @JoinColumn
-    private Status status;
+    @Column(nullable = false)
+    public Integer status;
 
-    public Tegs(){}
+    public Tegs() {
+    }
+
     public Tegs(String name) {
         this.name = name;
+        this.status = AbstractStatus.ACTIVE;
     }
 
     public Set<News> getNewsSet() {
@@ -56,12 +54,16 @@ public class Tegs{
         this.name = name;
     }
 
-    public Status getStatus() {
-        return status;
+    public Integer getStatus() {
+        return this.status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getStatusName() {
+        return AbstractStatus.getName(this.status);
     }
 
 }

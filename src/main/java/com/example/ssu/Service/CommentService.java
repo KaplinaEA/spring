@@ -1,6 +1,7 @@
 package com.example.ssu.Service;
 
 import com.example.ssu.Entity.Comment;
+import com.example.ssu.Helper.AbstractStatus;
 import com.example.ssu.Repository.CommentRepository;
 import com.example.ssu.Repository.NewsRepository;
 import com.google.gson.Gson;
@@ -23,34 +24,33 @@ public class CommentService {
     @Autowired
     private NewsRepository newsRepository;
 
-    public Iterable<Comment> index(){
-        Iterable<Comment> tegs = commentRepository.findAll();
+    public Iterable<Comment> index() {
+        Iterable<Comment> tegs = commentRepository.findByStatus(AbstractStatus.ACTIVE);
         return tegs;
     }
 
-    public Comment create(String text, Integer newsId){
+    public Comment create(String text, Integer newsId) {
         Comment comment = new Comment(text, newsRepository.findById(newsId).get());
         commentRepository.save(comment);
         return comment;
     }
 
-    public Comment edit(@RequestBody String request){
+    public Comment edit(@RequestBody String request) {
         JsonObject jsonObject = new Gson().fromJson(request, JsonObject.class);
         Integer id = jsonObject.get("id").getAsInt();
         JsonElement text = jsonObject.get("text");
 
         Optional<Comment> comment = commentRepository.findById(id);
-        if (text != null){
-            comment.get().setText(text.isJsonNull()?null:text.getAsString());
+        if (text != null) {
+            comment.get().setText(text.isJsonNull() ? null : text.getAsString());
             comment.get().setUpdateAp(new Date());
-        }
-        else //ошибка;
-        commentRepository.save(comment.get());
+        } else //ошибка;
+            commentRepository.save(comment.get());
         return comment.get();
     }
 
-    public void delete(Comment comment)
-    {
-        commentRepository.delete(comment);
+    public void delete(Comment comment) {
+        comment.setStatus(AbstractStatus.ARCHIVE);
+        commentRepository.save(comment);
     }
 }
