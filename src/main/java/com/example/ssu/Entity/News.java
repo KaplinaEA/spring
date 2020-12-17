@@ -73,6 +73,10 @@ public class News{
         this.comments = comments;
     }
 
+    public void addComments(Comment comment){
+        this.comments.add(comment);
+    }
+
     public Integer getStatus() {
         return this.status;
     }

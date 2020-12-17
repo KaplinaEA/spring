@@ -6,6 +6,7 @@ import com.example.ssu.Repository.TegsRepository;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,16 +34,20 @@ public class TegsService {
         return tegs;
     }
 
-    public Tegs edit(@RequestBody String request) {
+    public ResponseEntity<Tegs> edit(@RequestBody String request) {
         JsonObject jsonObject = new Gson().fromJson(request, JsonObject.class);
         Integer id = jsonObject.get("id").getAsInt();
         JsonElement name = jsonObject.get("name");
 
         Optional<Tegs> teg = tegsRepository.findById(id);
-        if (name != null)
+        if (!teg.isPresent()) return ResponseEntity.notFound().build();
+        if (name != null) {
             teg.get().setName(name.isJsonNull() ? null : name.getAsString());
-        tegsRepository.save(teg.get());
-        return teg.get();
+            tegsRepository.save(teg.get());
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok().body(teg.get());
     }
 
     public void delete(Tegs tegs) {

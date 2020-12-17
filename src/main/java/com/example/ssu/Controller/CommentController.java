@@ -3,6 +3,8 @@ package com.example.ssu.Controller;
 import com.example.ssu.Entity.Comment;
 import com.example.ssu.Service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,7 +18,7 @@ public class CommentController {
         return commentService.index();
     }
 
-    @GetMapping("{news:\\d+}")
+    @GetMapping("/{comment:\\d+}")
     public Comment show(@PathVariable Comment comment) {
         return comment;
     }
@@ -27,12 +29,13 @@ public class CommentController {
     }
 
     @PutMapping()
-    public Comment edit(@RequestBody String request) {
+    public ResponseEntity<Comment> edit(@RequestBody String request) {
         return commentService.edit(request);
     }
 
-    @DeleteMapping("{news:\\d+}")
-    public void delete(@PathVariable Comment comment) {
+    @DeleteMapping("/{comment:\\d+}")
+    public ResponseEntity<String> delete(@PathVariable Comment comment) {
         commentService.delete(comment);
+        return new ResponseEntity<>("Comment deleted", HttpStatus.OK);
     }
 }

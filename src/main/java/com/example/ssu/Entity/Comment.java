@@ -12,13 +12,10 @@ public class Comment {
     private Integer id;
 
     @Column(nullable = false)
-    private Date creteAt;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    private News news;
+    private Date createAt;
 
     @Column(nullable = false)
-    private Date updateAp;
+    private Date updateAt;
 
     @Column(nullable = false)
     private String text;
@@ -29,43 +26,35 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(String text, News news) {
-        this.news = news;
-        this.creteAt = new Date();
-        this.updateAp = new Date();
+    public Comment(String text) {
+        this.createAt = new Date();
+        this.updateAt = new Date();
         this.text = text;
+        this.status = AbstractStatus.ACTIVE;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public News getNews() {
-        return news;
-    }
-
-    public void setNews(News news) {
-        this.news = news;
-    }
-
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public Date getCreteAt() {
-        return creteAt;
+    public Date getCreateAt() {
+        return createAt;
     }
 
-    public void setCreteAt(Date creteAt) {
-        this.creteAt = creteAt;
+    public void setCreateAt(Date creteAt) {
+        this.createAt = creteAt;
     }
 
-    public Date getUpdateAp() {
-        return updateAp;
+    public Date getUpdateAt() {
+        return updateAt;
     }
 
-    public void setUpdateAp(Date updateAp) {
-        this.updateAp = updateAp;
+    public void setUpdateAt() {
+        this.updateAt = new Date();
     }
 
     public String getText() {

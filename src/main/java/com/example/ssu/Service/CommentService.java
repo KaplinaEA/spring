@@ -1,6 +1,7 @@
 package com.example.ssu.Service;
 
 import com.example.ssu.Entity.Comment;
+import com.example.ssu.Entity.News;
 import com.example.ssu.Helper.AbstractStatus;
 import com.example.ssu.Repository.CommentRepository;
 import com.example.ssu.Repository.NewsRepository;
@@ -8,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,23 +32,27 @@ public class CommentService {
     }
 
     public Comment create(String text, Integer newsId) {
-        Comment comment = new Comment(text, newsRepository.findById(newsId).get());
+        Comment comment = new Comment(text);
         commentRepository.save(comment);
+        News news = newsRepository.findById(newsId).get();
+        news.addComments(comment);
+        newsRepository.save(news);
         return comment;
     }
 
-    public Comment edit(@RequestBody String request) {
+    public ResponseEntity<Comment> edit(@RequestBody String request) {
         JsonObject jsonObject = new Gson().fromJson(request, JsonObject.class);
         Integer id = jsonObject.get("id").getAsInt();
         JsonElement text = jsonObject.get("text");
 
         Optional<Comment> comment = commentRepository.findById(id);
+        if(!comment.isPresent()) return ResponseEntity.notFound().build();
         if (text != null) {
             comment.get().setText(text.isJsonNull() ? null : text.getAsString());
-            comment.get().setUpdateAp(new Date());
-        } else //ошибка;
-            commentRepository.save(comment.get());
-        return comment.get();
+            comment.get().setUpdateAt();
+        } else return ResponseEntity.badRequest().build();
+        commentRepository.save(comment.get());
+        return ResponseEntity.ok().body(comment.get());
     }
 
     public void delete(Comment comment) {
